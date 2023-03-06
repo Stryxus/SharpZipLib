@@ -1208,7 +1208,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 				baseStream_.Seek(entryAbsOffset, SeekOrigin.Begin);
 				var signature = (int)ReadLEUint();
 
-				if (signature != ZipConstants.LocalHeaderSignature)
+				if (signature != ZipConstants.LocalHeaderSignature && signature != ZipConstants.EncryptedHeaderSignature)
 				{
 					throw new ZipException($"Wrong local header signature at 0x{entryAbsOffset:x}, expected 0x{ZipConstants.LocalHeaderSignature:x8}, actual 0x{signature:x8}");
 				}
