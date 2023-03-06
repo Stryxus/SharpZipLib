@@ -43,5 +43,11 @@ Please see https://github.com/icsharpcode/SharpZipLib/wiki/Release-1.4.2 for mor
 	<ItemGroup>
 	  <EditorConfigFiles Remove="C:\Users\conno\OneDrive\Projects\unp4k\modules\SharpZipLib\src\ICSharpCode.SharpZipLib\.editorconfig" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="libzstd.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 	 
 </Project>
