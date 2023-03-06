@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <IsTrimmable>true</IsTrimmable>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <SignAssembly>true</SignAssembly>
@@ -33,19 +33,15 @@ Please see https://github.com/icsharpcode/SharpZipLib/wiki/Release-1.4.2 for mor
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<PackageReference Include="System.Memory" Version="4.5.4" />
-		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.2" />
-	</ItemGroup>
-
-	<ItemGroup>
 	   <None Include="../../assets/sharpziplib-nuget-256x256.png">
       <Pack>True</Pack>
       <PackagePath>images</PackagePath>
     </None>
+	   <None Include="C:\Users\conno\OneDrive\Projects\unp4k\modules\SharpZipLib\src\ICSharpCode.SharpZipLib\.editorconfig" />
 	 </ItemGroup>
+
+	<ItemGroup>
+	  <EditorConfigFiles Remove="C:\Users\conno\OneDrive\Projects\unp4k\modules\SharpZipLib\src\ICSharpCode.SharpZipLib\.editorconfig" />
+	</ItemGroup>
 	 
 </Project>
