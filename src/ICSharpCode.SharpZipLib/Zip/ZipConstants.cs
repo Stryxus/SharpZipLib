@@ -66,6 +66,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// WinZip special for AES encryption, Now supported by #Zip.
 		/// </summary>
 		WinZipAES = 99,
+
+		/// <summary>
+		/// ZStd compression.
+		/// </summary>
+		ZStd = 100,
 	}
 
 	/// <summary>
@@ -379,6 +384,8 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// Signature for local entry header
 		/// </summary>
 		public const int LocalHeaderSignature = 'P' | ('K' << 8) | (3 << 16) | (4 << 24);
+
+		public const int EncryptedHeaderSignature = 'P' | ('K' << 8) | (3 << 16) | (20 << 24);
 
 		/// <summary>
 		/// Signature for local entry header

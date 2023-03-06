@@ -984,6 +984,28 @@ namespace ICSharpCode.SharpZipLib.Zip
 				case CompressionMethod.BZip2:
 					result = new BZip2.BZip2InputStream(result);
 					break;
+				case CompressionMethod.ZStd:
+					var buffBytes = new Byte[4];
+
+					if (result.CanSeek && result.Read(buffBytes, 0, 4) > 0)
+					{
+						if (Zstd.Net.InputStream.IsZstdStream(buffBytes, result.Length))
+						{
+							result.Seek(-4, SeekOrigin.Current);
+
+							result = new Zstd.Net.InputStream(result, false);
+						}
+						else
+						{
+							result.Seek(-4, SeekOrigin.Current);
+						}
+					}
+					else
+					{
+						// Assume it's Zstd with no check
+						result = new Zstd.Net.InputStream(result, false);
+					}
+					break;
 
 				default:
 					throw new ZipException("Unsupported compression method " + method);
@@ -2760,6 +2782,8 @@ namespace ICSharpCode.SharpZipLib.Zip
 					result = dos;
 					break;
 
+				case CompressionMethod.ZStd:
+					throw new NotImplementedException("ZStd not implemented");
 				case CompressionMethod.BZip2:
 					var bzos = new BZip2.BZip2OutputStream(result)
 					{
@@ -3581,11 +3605,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 			
 			// Check if zip64 header information is required.
 			bool requireZip64 = thisDiskNumber == 0xffff ||
-			                    startCentralDirDisk == 0xffff ||
-			                    entriesForThisDisk == 0xffff ||
-			                    entriesForWholeCentralDir == 0xffff ||
-			                    centralDirSize == 0xffffffff ||
-			                    offsetOfCentralDir == 0xffffffff;
+								startCentralDirDisk == 0xffff ||
+								entriesForThisDisk == 0xffff ||
+								entriesForWholeCentralDir == 0xffff ||
+								centralDirSize == 0xffffffff ||
+								offsetOfCentralDir == 0xffffffff;
 
 			// #357 - always check for the existence of the Zip64 central directory.
 			// #403 - Take account of the fixed size of the locator when searching.
@@ -3819,7 +3843,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		private Stream CreateAndInitEncryptionStream(Stream baseStream, ZipEntry entry)
 		{
 			if (entry.Version >= ZipConstants.VersionStrongEncryption &&
-			    entry.HasFlag(GeneralBitFlags.StrongEncryption)) return null;
+				entry.HasFlag(GeneralBitFlags.StrongEncryption)) return null;
 
 			var classicManaged = new PkzipClassicManaged();
 

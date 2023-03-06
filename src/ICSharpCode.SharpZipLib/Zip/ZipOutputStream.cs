@@ -494,6 +494,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 				deflater_.Reset();
 				deflater_.SetLevel(compressionLevel);
 			}
+			if (method == CompressionMethod.ZStd)
+			{
+				throw new NotImplementedException("ZStd not supported");
+			}
+			size = 0;
 		}
 
 		/// <summary>
