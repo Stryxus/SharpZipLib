@@ -961,6 +961,17 @@ namespace ICSharpCode.SharpZipLib.Zip
 			}
 		}
 
+		private static int MakeExternalAttributes(FileInfo info)
+		{
+			return (int)info.Attributes;
+		}
+
+		private static bool NameIsValid(string name)
+		{
+			return !string.IsNullOrEmpty(name) &&
+				(name.IndexOfAny(Path.GetInvalidPathChars()) < 0);
+		}
+
 		#endregion Internal Processing
 
 		#region Instance Fields

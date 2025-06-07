@@ -50,7 +50,6 @@ namespace ICSharpCode.SharpZipLib
 		/// The System.Runtime.Serialization.StreamingContext that contains contextual information
 		/// about the source or destination.
 		/// </param>
-		[Obsolete("Obsolete")]
 		protected SharpZipBaseException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{

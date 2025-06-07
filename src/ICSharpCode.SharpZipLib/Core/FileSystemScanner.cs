@@ -400,6 +400,22 @@ namespace ICSharpCode.SharpZipLib.Core
 		}
 
 		/// <summary>
+		/// Raise the complete file event
+		/// </summary>
+		/// <param name="file">The file name</param>
+		private void OnCompleteFile(string file)
+		{
+			CompletedFileHandler handler = CompletedFile;
+
+			if (handler != null)
+			{
+				var args = new ScanEventArgs(file);
+				handler(this, args);
+				alive_ = args.ContinueRunning;
+			}
+		}
+
+		/// <summary>
 		/// Raise the ProcessDirectory event.
 		/// </summary>
 		/// <param name="directory">The directory name.</param>
