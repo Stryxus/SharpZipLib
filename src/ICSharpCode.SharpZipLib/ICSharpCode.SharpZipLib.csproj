@@ -7,12 +7,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-	  <None Update="libzstd.dll">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.5" />
 	</ItemGroup>
 	 
