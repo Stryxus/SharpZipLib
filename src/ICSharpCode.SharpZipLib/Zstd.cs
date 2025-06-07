@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Zstd.Net;
@@ -189,6 +190,34 @@ internal static class Zstd
 		#region DllImports
 
 		private const string DllName = "libzstd";
+		
+		static Zstd_x64()
+		{
+			NativeLibrary.SetDllImportResolver(typeof(Zstd_x64).Assembly, DllImportResolver);
+		}
+
+		private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+		{
+			if (libraryName == DllName)
+			{
+				string mappedName = GetPlatformSpecificLibraryName();
+				IntPtr handle;
+				if (NativeLibrary.TryLoad(mappedName, assembly, searchPath, out handle))
+					return handle;
+			}
+			return IntPtr.Zero;
+		}
+
+		private static string GetPlatformSpecificLibraryName()
+		{
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				return "zstd.dll";
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+				return "libzstd.so";
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+				return "libzstd.dylib";
+			throw new PlatformNotSupportedException();
+		}
 
 		[DllImport(DllName, EntryPoint = "ZSTD_maxCLevel", CallingConvention = CallingConvention.Cdecl)]
 		private static extern int zstd_GetMaxCompessionLevel();
