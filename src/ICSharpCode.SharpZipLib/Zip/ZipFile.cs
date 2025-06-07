@@ -346,15 +346,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 		}
 
 		/// <summary>
-		/// Get/set the encryption key value.
-		/// </summary>
-		private byte[] Key
-		{
-			get { return key; }
-			set { key = value; }
-		}
-
-		/// <summary>
 		/// Password to be used for encrypting/decrypting files.
 		/// </summary>
 		/// <remarks>Set to null if no password is required.</remarks>
@@ -980,10 +971,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 					// No need to worry about ownership and closing as underlying stream close does nothing.
 					result = new InflaterInputStream(result, InflaterPool.Instance.Rent(true));
 					break;
-
-				case CompressionMethod.BZip2:
-					result = new BZip2.BZip2InputStream(result);
-					break;
+				
 				case CompressionMethod.ZStd:
 					var buffBytes = new Byte[4];
 
@@ -2164,12 +2152,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 			WriteLEInt((int)(value >> 32));
 		}
 
-		private void WriteLEUlong(ulong value)
-		{
-			WriteLEUint((uint)(value & 0xffffffff));
-			WriteLEUint((uint)(value >> 32));
-		}
-
 		private void WriteLocalEntryHeader(ZipUpdate update)
 		{
 			ZipEntry entry = update.OutEntry;
@@ -2489,14 +2471,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 				name;
 		}
 
-		private string GetTransformedDirectoryName(string name)
-		{
-			INameTransform transform = NameTransform;
-			return (transform != null) ?
-				transform.TransformDirectory(name) :
-				name;
-		}
-
 		/// <summary>
 		/// Get a raw memory buffer.
 		/// </summary>
@@ -2784,15 +2758,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 
 				case CompressionMethod.ZStd:
 					throw new NotImplementedException("ZStd not implemented");
-				case CompressionMethod.BZip2:
-					var bzos = new BZip2.BZip2OutputStream(result)
-					{
-						// If there is an encryption stream in use, then we want that to be disposed when the BZip2OutputStream stream is disposed
-						// If not, then we don't want it to dispose the base stream
-						IsStreamOwner = entry.IsCrypted
-					};
-					result = bzos;
-					break;
 
 				default:
 					throw new ZipException("Unknown compression method " + entry.CompressionMethod);
@@ -2969,16 +2934,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 			isNewArchive_ = false;
 			baseStream_ = source ?? throw new ZipException("Failed to reopen archive - no source");
 			ReadEntries();
-		}
-
-		private void Reopen()
-		{
-			if (Name == null)
-			{
-				throw new InvalidOperationException("Name is not known cannot Reopen");
-			}
-
-			Reopen(File.Open(Name, FileMode.Open, FileAccess.Read, FileShare.Read));
 		}
 
 		private void UpdateCommentOnly()
@@ -3305,32 +3260,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 				// Do nothing.
 			}
 
-			[Obsolete]
-			public ZipUpdate(IStaticDataSource dataSource, string entryName, CompressionMethod compressionMethod)
-			{
-				command_ = UpdateCommand.Add;
-				entry_ = new ZipEntry(entryName)
-				{
-					CompressionMethod = compressionMethod
-				};
-				dataSource_ = dataSource;
-			}
-
 			public ZipUpdate(IStaticDataSource dataSource, ZipEntry entry)
 			{
 				command_ = UpdateCommand.Add;
 				entry_ = entry;
 				dataSource_ = dataSource;
-			}
-
-			public ZipUpdate(ZipEntry original, ZipEntry updated)
-			{
-				throw new ZipException("Modify not currently supported");
-				/*
-					command_ = UpdateCommand.Modify;
-					entry_ = ( ZipEntry )original.Clone();
-					outEntry_ = ( ZipEntry )updated.Clone();
-				*/
 			}
 
 			public ZipUpdate(UpdateCommand command, ZipEntry entry)
@@ -3638,7 +3572,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 				// total number of disks 4 bytes
 				ReadLEUint(); // startDisk64 is not currently used
 				ulong offset64 = ReadLEUlong();
-				uint totalDisks = ReadLEUint();
 
 				baseStream_.Position = (long)offset64;
 				long sig64 = ReadLEUint();
@@ -3649,13 +3582,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 				}
 
 				// NOTE: Record size = SizeOfFixedFields + SizeOfVariableData - 12.
-				ulong recordSize = ReadLEUlong();
-				int versionMadeBy = ReadLEUshort();
-				int versionToExtract = ReadLEUshort();
-				uint thisDisk = ReadLEUint();
-				uint centralDirDisk = ReadLEUint();
 				entriesForThisDisk = ReadLEUlong();
-				entriesForWholeCentralDir = ReadLEUlong();
 				centralDirSize = ReadLEUlong();
 				offsetOfCentralDir = (long)ReadLEUlong();
 
@@ -3991,21 +3918,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 				{
 					MakeBytesAvailable();
 					return (byte[])rawComment_.Clone();
-				}
-			}
-
-			/// <summary>
-			/// Reset the comment to its initial state.
-			/// </summary>
-			public void Reset()
-			{
-				if (isSourceString_)
-				{
-					rawComment_ = null;
-				}
-				else
-				{
-					comment_ = null;
 				}
 			}
 

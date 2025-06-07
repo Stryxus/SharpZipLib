@@ -115,26 +115,6 @@ namespace ICSharpCode.SharpZipLib.Zip.Compression
 			}
 
 			/// <summary>
-			/// Check that all frequencies are zero
-			/// </summary>
-			/// <exception cref="SharpZipBaseException">
-			/// At least one frequency is non-zero
-			/// </exception>
-			public void CheckEmpty()
-			{
-				bool empty = true;
-				for (int i = 0; i < freqs.Length; i++)
-				{
-					empty &= freqs[i] == 0;
-				}
-
-				if (!empty)
-				{
-					throw new SharpZipBaseException("!Empty");
-				}
-			}
-
-			/// <summary>
 			/// Set static codes and length
 			/// </summary>
 			/// <param name="staticCodes">new codes</param>
@@ -150,7 +130,6 @@ namespace ICSharpCode.SharpZipLib.Zip.Compression
 			/// </summary>
 			public void BuildCodes()
 			{
-				int numSymbols = freqs.Length;
 				int[] nextCode = new int[maxLength];
 				int code = 0;
 

@@ -1,66 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <IsTrimmable>true</IsTrimmable>
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../assets/ICSharpCode.SharpZipLib.snk</AssemblyOriginatorKeyFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>False</GenerateDocumentationFile>
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<Platforms>x64;ARM64</Platforms>
+		<OutputType>library</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
-  <!-- Nuget specific tags -->
-  <PropertyGroup>
-    <Version>1.4.2</Version>
-    <FileVersion>$(Version).13</FileVersion>
-    <AssemblyVersion>$(FileVersion)</AssemblyVersion>
-    <PackageId>SharpZipLib</PackageId>
-    <Company>ICSharpCode</Company>
-    <Authors>ICSharpCode</Authors>
-    <Description>SharpZipLib (#ziplib, formerly NZipLib) is a compression library for Zip, GZip, BZip2, and Tar written entirely in C# for .NET. It is implemented as an assembly (installable in the GAC), and thus can easily be incorporated into other projects (in any .NET language)</Description>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>http://icsharpcode.github.io/SharpZipLib/</PackageProjectUrl>
-		<PackageIcon>images/sharpziplib-nuget-256x256.png</PackageIcon>
-    <RepositoryUrl>https://github.com/icsharpcode/SharpZipLib</RepositoryUrl>
-    <Copyright>Copyright © 2000-2022 SharpZipLib Contributors</Copyright>
-    <PackageTags>Compression Library Zip GZip BZip2 LZW Tar</PackageTags>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageReleaseNotes>
-Please see https://github.com/icsharpcode/SharpZipLib/wiki/Release-1.4.2 for more information.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/icsharpcode/SharpZipLib</PackageProjectUrl> 
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-
-	<ItemGroup>
-	   <None Include="../../assets/sharpziplib-nuget-256x256.png">
-      <Pack>True</Pack>
-      <PackagePath>images</PackagePath>
-    </None>
-	   <None Include="C:\Users\conno\OneDrive\Projects\unp4k\modules\SharpZipLib\src\ICSharpCode.SharpZipLib\.editorconfig" />
-	 </ItemGroup>
-
-	<ItemGroup>
-	  <EditorConfigFiles Remove="C:\Users\conno\OneDrive\Projects\unp4k\modules\SharpZipLib\src\ICSharpCode.SharpZipLib\.editorconfig" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <None Update="libzstd.dll">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.5" />
 	</ItemGroup>
 	 
 </Project>

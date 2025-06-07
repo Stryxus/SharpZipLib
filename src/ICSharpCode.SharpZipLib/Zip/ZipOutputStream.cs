@@ -202,30 +202,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 			}
 		}
 
-		/// <summary>
-		/// Write an int in little endian byte order.
-		/// </summary>
-		private void WriteLeInt(int value)
-		{
-			unchecked
-			{
-				WriteLeShort(value);
-				WriteLeShort(value >> 16);
-			}
-		}
-
-		/// <summary>
-		/// Write an int in little endian byte order.
-		/// </summary>
-		private void WriteLeLong(long value)
-		{
-			unchecked
-			{
-				WriteLeInt((int)value);
-				WriteLeInt((int)(value >> 32));
-			}
-		}
-
 		// Apply any configured transforms/cleaning to the name of the supplied entry.
 		private void TransformEntryName(ZipEntry entry)
 		{
